@@ -19,6 +19,7 @@ Flex Table gives you the possibility to visualize any tabular data within Lovela
 | `sort_by[-\|+]`        | col-id          |   optional    | Sort by given column, '+' (ascending) or '-' (descending) [example](https://github.com/custom-cards/flex-table-card/blob/master/docs/example-cfg-sorting-strict.md)
 | `disable_header_sort`  | boolean         |   optional    | Disable manual sorting by column headers (default: `false`)
 | `max_rows`             | int             |   optional    | Restrict the number of (shown) rows to this maximum number
+| `row_class_name`       | string          |   optional    | Java-script to evaluate on the row data to apply a custom classname to the `tr` element. Both `data` (the final output) and `raw_data` (the selected data) are available. Example: `return "row-status-" + (raw_data[0].status || "NORMAL")`
 | `clickable`            | boolean         |   optional    | Activates the entities' on-click popup dialog
 | `auto_format`          | boolean         |   optional    | Format state and attribute data using display precision and unit of measurement, if applicable (default: `false`)
 | `display_footer`       | boolean         |   optional    | Display additional summary row at end for column totals, averages, etc. (default: `false`, see column options below)

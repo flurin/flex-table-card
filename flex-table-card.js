@@ -114,7 +114,7 @@ class DataTable {
     }
 
     add(...rows) {
-        this.rows.push(...rows.map(row => row.render_data(this.cols)));
+        this.rows.push(...rows.map(row => row.render_data(this.cfg, this.cols)));
     }
 
     clear_rows() {
@@ -209,6 +209,7 @@ class DataRow {
         this.raw_data = raw_data;
         this.data = null;
         this.has_multiple = false;
+        this.class_name = null;
         //this.colspan = null;
     }
 
@@ -428,7 +429,7 @@ class DataRow {
         return area_id === undefined || hass.areas[area_id] === undefined ? "-" : hass.areas[area_id].name;
     }
 
-    render_data(col_cfgs) {
+    render_data(table_cfg, col_cfgs) {
         // apply passed "modify" configuration setting by using eval()
         // assuming the data is available inside the function as "x"
         this.data = this.raw_data.map((raw, idx) => {
@@ -471,6 +472,7 @@ class DataRow {
             });
         });
         this.hidden = this.data.some(data => (data === null));
+        this.class_name = table_cfg.row_class_name_fun ? table_cfg.row_class_name_fun(this.data, this.raw_data) : ""
         return this;
     };
 }
@@ -566,6 +568,10 @@ class FlexTableCard extends HTMLElement {
                 return col
             }
         })
+
+        if(cfg.row_class_name) {
+            cfg.row_class_name_fun = Function("data", "raw_data", cfg.row_class_name)
+        }
 
         this.tbl = new DataTable(cfg);
 
@@ -668,7 +674,7 @@ class FlexTableCard extends HTMLElement {
     _updateContent(element, rows) {
         // callback for updating the cell-contents
         element.innerHTML = rows.map((row, index) =>
-            `<tr id="entity_row_${row.entity.entity_id}_${index}">${row.data.map(
+            `<tr id="entity_row_${row.entity.entity_id}_${index}" class="${row.class_name}">${row.data.map(
                 (cell) => ((!cell.hide) ?
                     `<td class="${cell.css}">${cell.pre}${cell.content}${cell.suf}</td>` : "")
             ).join("")}</tr>`).join("");
