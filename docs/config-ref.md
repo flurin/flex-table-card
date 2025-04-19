@@ -107,6 +107,9 @@ Apart from that `modify` and `footer_modify` are very powerful, see [advanced ce
 * `number`
 * `duration`
 * `duration_h`
+* `time` - Displays time in 24h format, i.e. "22:00", expects string or Date object
+* `times_with_delay` - Displays time with optional delay, expects 2 date strings or Date objects in an array, i.e. `[a,b]`
+* `icon` - Displays icon, expects icon name as string
 
 Feel free to contribute, just share your best `modify` line to allow others to use them, too.
 

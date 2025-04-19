@@ -86,8 +86,28 @@ const CellFormatters = {
         let s = (data > 0) ? Math.floor((data % 3600) % 60).toString() : '';
         if (m) s = s.padStart(2, 0);
         return d + h + m + s;
-    }
+    },
+    time: function(data) {
+      const date = new Date(data)
 
+      return String(date.getHours()).padStart(2,'0')+":"
+      +String(date.getMinutes()).padStart(2,'0');
+    },
+    times_with_delay: function(data) {
+      const dates = data.map(d => new Date(d))
+      const delay  = Math.round((dates[1] - dates[0]) /
+      1000 / 60)
+
+      if(delay <= 0) {
+        return this.time(dates[0])
+      } else {
+        return this.time(dates[0]) + '<div class="time-delay"> +' + delay +'</div>';
+
+      }
+    },
+    icon: function(data) {
+      return '<ha-icon icon="' + data + '"></ha-icon>'
+    }
 
 }
 
