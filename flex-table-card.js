@@ -434,6 +434,16 @@ class DataRow {
         this.data = this.raw_data.map((raw, idx) => {
             let x = raw;
             let cfg = col_cfgs[idx];
+
+            if(cfg.transform_fun) {
+                try {
+                    x = cfg.transform_fun(x)
+                } catch (error) {
+                    console.error(error)
+                    x = "ERROR"
+                }
+            }
+
             if (cfg.fmt) {
                 try {
                     x = CellFormatters[cfg.fmt](x);
@@ -547,6 +557,15 @@ class FlexTableCard extends HTMLElement {
         card.header = cfg.title;
         const content = document.createElement('div');
         const style = document.createElement('style');
+
+        // Precompile column transformers
+        cfg.columns = cfg.columns.map(col => {
+            if(col.transform) {
+                return {...col, transform_fun: Function("x", col.transform) }
+            } else {
+                return col
+            }
+        })
 
         this.tbl = new DataTable(cfg);
 

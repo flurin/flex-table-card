@@ -78,7 +78,8 @@ definition. Apart from `sort_by` no other option requires referencing of this id
 | `data`                 | string   | **required**  | selector for data to be shown, see [column data examples](https://github.com/custom-cards/flex-table-card/blob/master/docs/example-cfg-data.md)
 | `hidden`               | bool     |   optional    | `true` to avoid showing the column (e.g., for sorting)
 | `icon`                 | string   |   optional    | use `icon` inside header (left of `name`), typical `mdi:something` ([cheatsheet](https://cdn.materialdesignicons.com/4.5.95/))
-| `modify`               | string   |   optional*   | apply java-script code, `x` is data, i.e., `(x) => eval(<modfiy>)`
+| `modify`               | string   |   optional*   | apply java-script code **after** data has been formatted, `x` is data, i.e., `(x) => eval(<modfiy>)`
+| `transform`            | string   |   optional*   | apply java-script code **before** data has been formatted, `x` is data; operation is performad withing a function so you must use `return` to return the transformed data, i.e., `return x`
 | `align`                | enum     |   optional    | text alignment, one of: `left`, `center`, `right` (default: `left`)
 | `prefix`               | string   |   optional    | to be applied _before_ all cell contents 
 | `suffix`               | string   |   optional    | to be appended _after_ all cell contents
