@@ -50,20 +50,17 @@ function compareVersion(vers1, vers2) {
     return (vers1.length == vers2.length) ? 0 : (vers1.length < vers2.length ? -1 : 1);
 }
 
-class CellFormatters {
-    constructor() {
-        this.failed = false;
-    }
-    number(data) {
+const CellFormatters = {
+    number: function(data) {
         return parseFloat(data);
-    }
-    full_datetime(data) {
+    },
+    full_datetime: function(data) {
         return Date.parse(data);
-    }
-    hours_passed(data) {
+    },
+    hours_passed: function(data) {
         return Math.round((Date.now() - Date.parse(data)) / 36000.) / 100;
-    }
-    hours_mins_passed(data) {
+    },
+    hours_mins_passed: function(data) {
         const hourDiff = (Date.now() - Date.parse(data));
         //const secDiff = hourDiff / 1000;
         const minDiff = hourDiff / 60 / 1000;
@@ -72,15 +69,15 @@ class CellFormatters {
         const minutes = minDiff - 60 * hours;
         const minr = Math.floor(minutes);
         return (!isNaN(hours) && !isNaN(minr)) ? hours + " hours " + minr + " minutes" : null;
-    }
-    duration(data) {
+    },
+    duration: function(data) {
         let h = (data > 3600) ? Math.floor(data / 3600).toString() + ':' : '';
         let m = (data > 60) ? Math.floor((data % 3600) / 60).toString().padStart(2, 0) + ':' : '';
         let s = (data > 0) ? Math.floor((data % 3600) % 60).toString() : '';
         if (m) s = s.padStart(2, 0);
         return h + m + s;
-    }
-    duration_h(data) {
+    },
+    duration_h: function(data) {
         let d = (data > 86400) ? Math.floor(data / 86400).toString() + 'd ' : '';
         let h = (data > 3600) ? Math.floor((data % 86400) / 3600) : ''
         h = (d) ? h.toString().padStart(2,0) + ':' : ((h) ? h.toString() + ':' : '');
@@ -437,11 +434,13 @@ class DataRow {
         this.data = this.raw_data.map((raw, idx) => {
             let x = raw;
             let cfg = col_cfgs[idx];
-			let fmt = new CellFormatters();
             if (cfg.fmt) {
-                x = fmt[cfg.fmt](x);
-                if (fmt.failed)
-                   x = null;
+                try {
+                    x = CellFormatters[cfg.fmt](x);
+                } catch (error) {
+                    console.error(error)
+                    x = "FORMATTING ERROR"
+                }
             }
 
             let content = (cfg.modify) ? eval(cfg.modify) : x;
